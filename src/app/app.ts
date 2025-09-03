@@ -2,10 +2,11 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HelloWorld } from './hello-world/hello-world';
 import { NavBar } from './shared/ui/navbar'
+import { carousel } from "./layout/carousel";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HelloWorld, NavBar],
+  imports: [RouterOutlet, HelloWorld, NavBar, carousel],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
