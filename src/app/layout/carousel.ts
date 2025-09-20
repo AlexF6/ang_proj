@@ -1,29 +1,56 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
+
+export interface MovieItem {
+  title: string;
+  imageSrc: string; // e.g. 'assets/bcs.jpg'
+  synopsis?: string;
+}
 
 @Component({
-  selector: 'app-layout-carousel',
-  imports: [],
+  selector: 'carousel',
   templateUrl: './carousel.html',
-  styleUrl: './carousel.scss'
+  styleUrls: ['./carousel.css']
 })
-export class carousel {
-  // hoveredIndex: number | null = null;
+export class CarouselComponent implements AfterViewInit {
+  @Input() title = 'Recomendados';
+  @Input() items: MovieItem[] = [];
 
-  // items = [
-  //   { title: 'Griselda', img: 'bcs.jpg' },
-  //   { title: 'Blood & Water', img: 'assets/blood-water.jpg' },
-  //   { title: 'One Day', img: 'assets/one-day.jpg' },
-  //   { title: 'Spider-Man', img: 'assets/spiderman.jpg' },
-  //   { title: 'Meg 2', img: 'assets/meg2.jpg' },
-  //   // ...más
-  // ];
+  @ViewChild('viewport', { static: true }) viewport!: ElementRef<HTMLDivElement>;
 
-  // setHover(i: number | null) {
-  //   this.hoveredIndex = i;
-  // }
+  canScrollPrev = false;
+  canScrollNext = false;
 
-  // scroll(container: HTMLElement, dir: 'left' | 'right') {
-  //   const delta = dir === 'left' ? -container.clientWidth * 0.9 : container.clientWidth * 0.9;
-  //   container.scrollBy({ left: delta, behavior: 'smooth' });
-  // }
+  ngAfterViewInit(): void {
+    // Evalúa estado inicial de flechas
+    setTimeout(() => this.updateArrows(), 0);
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateArrows();
+  }
+
+  private updateArrows() {
+    const el = this.viewport.nativeElement;
+    this.canScrollPrev = el.scrollLeft > 0;
+    this.canScrollNext = el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
+  }
+
+  scrollBy(direction: 'prev' | 'next') {
+    const el = this.viewport.nativeElement;
+    const amount = Math.round(el.clientWidth * 0.9); // avanza ~90% del viewport
+    const delta = direction === 'next' ? amount : -amount;
+
+    el.scrollBy({ left: delta, behavior: 'smooth' });
+    // Re-check a little later to allow smooth scroll to update
+    setTimeout(() => this.updateArrows(), 350);
+  }
+
+  onViewportScroll() {
+    this.updateArrows();
+  }
+
+  trackByIndex(_i: number, _item: MovieItem) {
+    return _i;
+  }
 }

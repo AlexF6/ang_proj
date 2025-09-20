@@ -1,25 +1,53 @@
-<div>
-  <img src="assets/bcs.jpg" alt="">
-</div>
+<section class="carousel" role="region" [attr.aria-label]="title">
+  <header class="carousel__header">
+    <h2>{{ title }}</h2>
+    <div class="spacer"></div>
+    <div class="dots" aria-hidden="true"></div>
+  </header>
 
-<!-- netflix-carousel.component.html -->
-<!-- <div class="row">
-  <button class="nav left" (click)="scroll(scroller, 'left')">‹</button>
+  <div class="carousel__shell">
+    <button
+      class="nav-btn nav-btn--left"
+      type="button"
+      (click)="scrollBy('prev')"
+      [disabled]="!canScrollPrev"
+      aria-label="Desplazar a la izquierda">
+      ‹
+    </button>
 
-  <div #scroller class="scroller" 
-       [class.is-hovering]="hoveredIndex !== null">
-    <div 
-      class="card"
-      *ngFor="let it of items; let i = index"
-      [class.active]="hoveredIndex === i"
-      [class.dimmed]="hoveredIndex !== null && hoveredIndex !== i"
-      (mouseenter)="setHover(i)"
-      (mouseleave)="setHover(null)"
-    >
-      <img [src]="it.img" [alt]="it.title" loading="lazy" />
-      <div class="title">{{ it.title }}</div>
+    <div
+      #viewport
+      class="carousel__viewport"
+      (scroll)="onViewportScroll()"
+      tabindex="0"
+      aria-roledescription="carrusel">
+      <div class="carousel__track">
+        <article
+          class="card"
+          *ngFor="let item of items; trackBy: trackByIndex">
+          <div class="thumb">
+            <img [src]="item.imageSrc" [alt]="item.title">
+          </div>
+
+          <div class="overlay">
+            <div class="overlay__top">
+              <button class="pill" type="button" aria-label="Reproducir">▶</button>
+              <button class="pill" type="button" aria-label="Agregar a favoritos">＋</button>
+            </div>
+            <h3 class="card__title">{{ item.title }}</h3>
+            <p class="card__synopsis" *ngIf="item.synopsis">{{ item.synopsis }}</p>
+          </div>
+        </article>
+      </div>
     </div>
-  </div>
 
-  <button class="nav right" (click)="scroll(scroller, 'right')">›</button>
-</div> -->
+    <button
+      class="nav-btn nav-btn--right"
+      type="button"
+      (click)="scrollBy('next')"
+      [disabled]="!canScrollNext"
+      aria-label="Desplazar a la derecha">
+      ›
+    </button>
+  </div>
+</section>

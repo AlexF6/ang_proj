@@ -1,9 +1,8 @@
 <main class="main bg-black min-h-screen text-gray-300 px-8">
   <app-navbar></app-navbar>
-  
+  <carousel [title]="'Popular on Netflix'" [items]="movies"></carousel>
   <!-- <h1>Hello, {{ title() }}</h1> -->
   <!-- <app-hello-world></app-hello-world> -->
-  <app-layout-carousel></app-layout-carousel>
 </main>
 
 <router-outlet />
